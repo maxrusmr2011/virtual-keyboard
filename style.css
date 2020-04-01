@@ -63,6 +63,8 @@ textarea {
   border-radius: 5px;
   background-color: #cccccc;
   box-shadow: -2px 3px 0 #666666;
+  cursor: pointer;
+  -webkit-user-select: none;
 }
 
 .keyboard>div>.system>div, .keyboard>div>.small>div {
