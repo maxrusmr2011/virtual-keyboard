@@ -227,22 +227,24 @@ function deActiveSystem(code) {
 }
 
 function clickKey(event) {
+  const TIMER_S = 1000;
+  const TIMER_K = 100;
   let now = new Date().getTime();
   let element = event.currentTarget;
   let keyCode = element.id;
   if (event.type === 'mouseup') {
     let interval = now - times[keyCode];
-    if (systemKey(keyCode) && interval < 1000) {
+    if (systemKey(keyCode) && interval < TIMER_S) {
       setTimeout(() => {
         element.classList.remove('active');
         clearTimes(keyCode);
         deActiveSystem(keyCode);
-      }, 1000);
-    } else if (!systemKey(keyCode) && interval < 100) {
+      }, TIMER_S);
+    } else if (!systemKey(keyCode) && interval < TIMER_K) {
       setTimeout(() => {
         element.classList.remove('active');
         clearTimes(keyCode);
-      }, 100);
+      }, TIMER_K);
     } else {
       element.classList.remove('active');
       clearTimes(keyCode);
@@ -251,7 +253,7 @@ function clickKey(event) {
     textarea.focus();
     return;
   }
-  if (times[keyCode] && now - times[keyCode] < 100) {
+  if (times[keyCode] && now - times[keyCode] < TIMER_K) {
     return;
   }
   element.classList.add('active');
@@ -311,7 +313,6 @@ function elementKey(el) {
     alt = true;
   } else if (el.id === 'ControlLeft' || el.id === 'ControlRight') {
     ctrl = true;
-  } else if (el.id === 'OSLeft') {
   }
   textarea.focus();
   textarea.selectionStart = textarea.selectionEnd = pos;
@@ -329,6 +330,7 @@ function markCaps() {
 }
 
 function upDown(str, position, up) {
+  const MOVE_UP = 2;
   let newPos = 0,
     arr = str.split('\n');
   let line = 0,
@@ -348,11 +350,11 @@ function upDown(str, position, up) {
     return posEnd;
   }, 0);
   posLine = position - posStart;
-  if (arr.length === 1 || (!up && line === arr.length) || (up && line === 1)) {
+  if (arr.length === 1 || !up && line === arr.length || up && line === 1) {
     return position;
   }
   if (up) {
-    newPos = preStart + Math.min(posLine, arr[line - 2].length);
+    newPos = preStart + Math.min(posLine, arr[line - MOVE_UP].length);
   } else {
     newPos = posEnd + Math.min(posLine, arr[line].length);
   }
