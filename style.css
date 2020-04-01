@@ -3,11 +3,17 @@
   padding: 0;
   border: 0;
   box-sizing: border-box;
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: 700;
+}
+body {
+  height: 100vh;
 }
 
 body>div {
-  max-width: 800px;
+  max-width: 1000px;
   margin: 10px auto;
+  padding: 0 5px;
 }
 
 textarea {
@@ -24,18 +30,23 @@ textarea {
 
 .keyboard>div>div {
   position: relative;
-  background-color: #ccc;
   margin: 2px;
-  border-radius: 5px;
 }
 
-.keyboard>div>div.key,
-.keyboard>div>div.small {
+.key, .small {
   flex: 0 0 6%;
 }
 
-.keyboard>div>div.key::before,
-.keyboard>div>div.small::before {
+
+.space {
+  flex-grow: 10;
+}
+
+.system {
+  flex-grow: 1;
+}
+
+.key::before, .small::before {
   content: "";
   padding-top: 100%;
   height: 0;
@@ -48,21 +59,36 @@ textarea {
   display: flex;
   justify-content: center;
   align-items: center;
+  border-radius: 5px;
+  background-color: #cccccc;
+  box-shadow: -2px 3px 0 #666666;
 }
 
-.keyboard>div>div.space {
-  flex-grow: 10;
-}
-
-.keyboard>div>div.system {
-  flex-grow: 1;
-}
-
-.keyboard>div>div.system,
-.keyboard>div>div.small {
+.keyboard>div>.system>div, .keyboard>div>.small>div {
   background-color: #999999;
 }
 
-.active {
+.keyboard>div>div>div.active {
   background-color: rgb(32, 116, 212);
+  transform: translate(-1px, 2px);
+  box-shadow: -1px 1px 0 #666666;
+}
+
+.mark {
+  color: #ffffff !important;
+}
+
+.footer {
+  position: absolute;
+  bottom: 0;
+  opacity: 0.3;
+}
+
+@media (max-width: 678px) {
+  * {
+    font-size: 10px;
+  }
+  .key, .small {
+    flex: 0 0 5%;
+  }
 }
