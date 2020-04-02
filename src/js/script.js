@@ -90,11 +90,15 @@ function createKeyboard() {
   field.append(textarea);
   let keyboard = document.createElement('div');
   keyboard.classList.add('keyboard');
+  keyboard.addEventListener('mousedown', clickKey);
+  keyboard.addEventListener('mouseup', clickKey);
+
   KEYS.forEach(row => {
     let oneRow = document.createElement('div');
     let arrayKeys = row.map(key => {
       let oneKey = document.createElement('div');
       let innerKey = document.createElement('div');
+      oneKey.classList.add('outer');
       if (key.form === 'k') {
         oneKey.classList.add('key');
         innerKey.textContent = changeOneKey(key);
@@ -108,9 +112,8 @@ function createKeyboard() {
         innerKey.textContent = key.en;
       }
       innerKey.id = key.code;
-      innerKey.classList.add(key.code);
-      innerKey.addEventListener('mousedown', clickKey);
-      innerKey.addEventListener('mouseup', clickKey);
+      // innerKey.addEventListener('mousedown', clickKey);
+      // innerKey.addEventListener('mouseup', clickKey);
       oneKey.append(innerKey);
       return oneKey;
     });
@@ -124,31 +127,40 @@ function createKeyboard() {
   textarea.focus();
 }
 
+function normalizeKeys(code) {
+  if (code === 'Delete') {
+    code = 'NumpadDecimal';
+  } else if (code === 'ArrowLeft') {
+    code = 'Numpad4';
+  } else if (code === 'ArrowRight') {
+    code = 'Numpad6';
+  } else if (code === 'ArrowUp') {
+    code = 'Numpad8';
+  } else if (code === 'ArrowDown') {
+    code = 'Numpad2';
+  }
+  return code;
+}
+
 function keyDown(event) {
-  textarea.focus();
-  let element = document.querySelector('#' + event.code);
+  let code = normalizeKeys(event.code);
+  console.log(code);
+  let element = code && document.getElementById(code);
   if (element) {
     element.classList.add('active');
     elementKey(element);
+    event.preventDefault();
   }
-  if (event.ctrlKey && event.shiftKey) {
-    ru = !ru;
-    view();
-  }
-  event.preventDefault();
 }
 
 function keyUp(event) {
-  document.querySelector('#' + event.code).classList.remove('active');
-  if (event.key === 'Shift') {
-    shift = false;
-    view();
-  } else if (event.key === 'Alt') {
-    alt = false;
-  } else if (event.key === 'Control') {
-    ctrl = false;
+  let code = normalizeKeys(event.code);
+  let element = code && document.getElementById(code);
+  if (element) {
+    element.classList.remove('active');
+    deActiveSystem(code);
+    textarea.focus();
   }
-  textarea.focus();
 }
 
 function changeOneKey(key) {
@@ -230,7 +242,10 @@ function clickKey(event) {
   const TIMER_S = 1000;
   const TIMER_K = 100;
   let now = new Date().getTime();
-  let element = event.currentTarget;
+  let element = event.target;
+  if (!element.parentElement.classList.contains('outer')) {
+    return;
+  }
   let keyCode = element.id;
   if (event.type === 'mouseup') {
     let interval = now - times[keyCode];
@@ -258,9 +273,6 @@ function clickKey(event) {
   }
   element.classList.add('active');
   elementKey(element);
-  if (ctrl && shift) {
-    lang();
-  }
 }
 
 function lang() {
@@ -317,6 +329,9 @@ function elementKey(el) {
   textarea.focus();
   textarea.selectionStart = textarea.selectionEnd = pos;
   times[found] = new Date().getTime();
+  if (ctrl && shift) {
+    lang();
+  }
   return found;
 }
 
