@@ -112,8 +112,6 @@ function createKeyboard() {
         innerKey.textContent = key.en;
       }
       innerKey.id = key.code;
-      // innerKey.addEventListener('mousedown', clickKey);
-      // innerKey.addEventListener('mouseup', clickKey);
       oneKey.append(innerKey);
       return oneKey;
     });
@@ -144,7 +142,6 @@ function normalizeKeys(code) {
 
 function keyDown(event) {
   let code = normalizeKeys(event.code);
-  console.log(code);
   let element = code && document.getElementById(code);
   if (element) {
     element.classList.add('active');
